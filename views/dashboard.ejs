@@ -1,0 +1,168 @@
+<!-- userDashboard.ejs -->
+<style>
+  h1 {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  form {
+    margin-bottom: 20px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 10px;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  input[type="text"],
+  input[type="file"] {
+    margin-bottom: 10px;
+    width: 300px;
+    padding: 5px;
+  }
+
+  .product-input,
+  .inventory-input,
+  .file-input {
+    margin-bottom: 10px;
+  }
+
+  .file-input input[type="file"] {
+    display: block;
+  }
+
+  button[type="button"],
+  button[type="submit"] {
+    margin-top: 10px;
+    padding: 5px 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+</style>
+
+
+
+<h1>Search Products</h1>
+<form action="/users/searchProducts" method="GET">
+  <input type="text" name="productName" placeholder="Enter Product Name" required>
+  <button type="submit">Search</button>
+</form>
+
+<h1>Search Results</h1>
+
+<% if (products.length === 0) { %>
+  <p>No products found.</p>
+<% } else { %>
+  <ul>
+    <% products.forEach(function(product) { %>
+      <li>
+        <h3><%= product.productName %></h3>
+        <p>MRP: <%= product.mrp %></p>
+        <p>SP: <%= product.sp %></p>
+        <p>Quantity: <%= product.qty %></p>
+      </li>
+    <% }); %>
+  </ul>
+<% } %>
+
+<h1>ADD Store info</h1>
+
+<form method="post" action="/users/storeinfo">
+  <input type="text" name="address" placeholder="Enter Address" />
+  <input type="text" name="gst" placeholder="Enter GST No" />
+  <input type="text" name="logo" placeholder="Place your logo" />
+  <input type="text" name="timings" placeholder="Enter your Timings" />
+  <input type="hidden" name="userId" />
+  <input type="hidden" name="userName" />
+  <input type="submit" />
+</form>
+
+<h1>Add categeory</h1>
+<!-- Add Product Form -->
+<form action="/users/addproduct" method="POST" id="add-product-form">
+  <div id="products-container">
+    <div class="product-input">
+      <input type="text" name="key" placeholder="categeory Name" required>
+      <input type="text" name="value" placeholder="Value" required>
+    </div>
+  </div>
+  <button type="button" onclick="addProduct()">Add some categeories</button>
+  <button type="submit">Submit</button>
+</form>
+
+<!-- Add Inventory Form -->
+
+<h1>Add Inventory </h1>
+<form action="/users/addinventory" method="POST">
+  <div id="inventory-container">
+    <div class="inventory-input">
+      <input type="text" name="key" placeholder="MRP" required>
+      <input type="text" name="value" placeholder="Rs" required>
+    </div>
+    
+  </div>
+  <button type="button" onclick="addInventory()">Add other Inventory</button>
+  <button type="submit">Submit</button>
+</form>
+
+<h1>Add Files</h1>
+<form action="/users/upload-image" method="POST" enctype="multipart/form-data">
+  <div id="files-container">
+    <div class="file-input">
+      <input type="file" name="avatar" placeholder="Profile Picture" multiple>
+    </div>
+  </div>
+  <button type="button" onclick="addMultipleFile()">Choose other files</button>
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  // Add Product
+function addProduct() {
+  const container = document.getElementById('products-container');
+  const productInput = document.createElement('div');
+  productInput.classList.add('product-input');
+  productInput.innerHTML = `
+      <input type="text" name="key" placeholder="Key" required>
+      <input type="text" name="value" placeholder="Value" required>
+  `;
+  container.appendChild(productInput);
+}
+
+// Add Inventory
+function addInventory() {
+  const container = document.getElementById('inventory-container');
+  const inventoryInput = document.createElement('div');
+  inventoryInput.classList.add('inventory-input');
+  inventoryInput.innerHTML = `
+      <input type="text" name="key" placeholder="Key" required>
+      <input type="text" name="value" placeholder="Value" required>
+  `;
+  container.appendChild(inventoryInput);
+}
+
+// Add Multiple Files
+function addMultipleFile() {
+  const container = document.getElementById('files-container');
+  const fileInput = document.createElement('div');
+  fileInput.classList.add('file-input');
+  fileInput.innerHTML = `
+    <input type="file" name="avatar[]" placeholder="Profile Picture">
+  `;
+  container.appendChild(fileInput);
+}
+</script>
+
